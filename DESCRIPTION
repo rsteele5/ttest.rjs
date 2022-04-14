@@ -11,3 +11,7 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/rsteele5/ttest.rjs
 BugReports: https://github.com/rsteele5/ttest.rjs/issues
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
