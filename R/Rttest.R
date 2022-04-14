@@ -1,12 +1,10 @@
 Rttest = function(x, y, paired=F, alpha=0.05){
   #### Input Error Checking ####
-  if(!is.vector(x)) {stop("`x` must be vector")}
-  if(!is.vector(y)) {stop("`y` must be vector")}
-  if(!is.logical(paired)) {stop("`paired` must be a logical")}
-  if(!is.numeric(alpha)) {stop("`alpha` must be numeric")}
-  else if (alpha>1 | alpha<0) {
-    stop(paste("`alpha` = ", alpha,"\n`alpha` must be between 0 and 1"))
-  }
+  stopifnot("`x` must be vector"= is.vector(x),
+            "`y` must be vector"= is.vector(y),
+            "`paired` must be a logical"= is.logical(paired),
+            "`alpha` must be numeric"= is.numeric(alpha),
+            "`alpha` must be between 0 and 1"= (alpha<=1|alpha>=0))
 
   #### T-Test Analysis and Execution ####
   # Variance Test (Currently variance in populations are assumed to be the same)
