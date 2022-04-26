@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Constructor Function
+## Constructor and Print Function
 
 Not shown here: I have added roxygen comments to generate R Documentation for 
 the constructor and print functions, and imported my used functions from 
@@ -27,9 +27,6 @@ ttest.rjs:::print.Rttest
 
 
 ## Execution Test
-
-As shown below the the class of `obj` is `"Rttest"`. Additionally the print statement 
-returns a the kable interpretation of the data.frame `data` .
 
 ``` {r test}
 set.seed(21);x <-rnorm(30,5,2); set.seed(23); y<- rnorm(30, 3,2); alpha <- 0.05
