@@ -44,10 +44,19 @@ Rttest = function(x, y, paired=F, alpha=0.05){
   obj
 }
 
-#' @method print Rttest
-#' @importFrom kableExtra scroll_box kable_styling kbl
+
+
+#' Print.Rttest
 #'
-print.Rttest = function(x){
+#' Displays the 2 sample using kable.
+#'
+#' @param x Rttest class object
+#' @param ... unused
+#'
+#' @importFrom kableExtra scroll_box kable_styling kbl
+#' @export
+#'
+print.Rttest = function(x, ...){
   #convert the data into distinct X and Y vectors
   data = x[["data"]]
   xv = data[data[1] == 'x',2]
