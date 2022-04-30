@@ -25,7 +25,7 @@ This function preforms several types of t-tests tailored towards user input.
 }
 \examples{
 x <-rnorm(30,5,2)
-y<- rnorm(40, 3,2)
+y <- rnorm(40,3,2)
 alpha <- 0.1
 obj <- Rttest(x = x, y = y, alpha = alpha)
 

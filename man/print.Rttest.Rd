@@ -4,10 +4,15 @@
 \alias{print.Rttest}
 \title{Print.Rttest}
 \usage{
-\method{print}{Rttest}(x, ...)
+\method{print}{Rttest}(x, width = NULL, height = 400, ...)
 }
 \arguments{
-\item{x}{Rttest class object}
+\item{x}{Rttest object}
+
+\item{width}{The width in pixels(px). (defualt: NULL)}
+
+\item{height}{The height in pixels(px). This can be set to NULL for and
+unbounded height. (defualt: 400)}
 
 \item{...}{unused}
 }
