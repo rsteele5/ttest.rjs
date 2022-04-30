@@ -1,7 +1,7 @@
 Package: ttest.rjs
 Type: Package
 Title: What the Package Does (Title Case)
-Version: 0.1.0.9001
+Version: 0.1.0.9002
 Author: Remington Steele
 Maintainer: Remington Steele <remington.steele@ou.edu>
 Description: Package 1 Progress 4 for OU DSA 5041 Adv R. Plot Function added.
