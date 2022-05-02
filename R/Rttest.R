@@ -114,6 +114,9 @@ print.Rttest = function(x, width=NULL, height=400,...){
 plot.Rttest = function(x, main="Comparison of Value Distripution per Sample",
                        sub=NULL, poplab="Population", vlab="Value",
                        xlab=NULL, ylab=NULL, ...){
+  #### Global Variable Instantiation ####
+  Population = NULL
+  Value = NULL
   #### Input Error Checking ####
   stopifnot("`main` must be string"= is.stringORnull(main),
             "`sub` must be string"= is.stringORnull(sub),
