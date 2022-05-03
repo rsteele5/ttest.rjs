@@ -4,7 +4,10 @@ Title: What the Package Does (Title Case)
 Version: 0.1.0.9003
 Author: Remington Steele
 Maintainer: Remington Steele <remington.steele@ou.edu>
-Description: Package 1 Progress 4 for OU DSA 5041 Adv R. Plot Function added.
+Description: R Package for OU Spring 2022 DSA:5041 Adv R. This package performs 
+    an interactive 2 sample t-test with descriptive and modifiable print and plot
+    output. Stretching my skills to the limit, I utilize interesting components 
+    of the R language and packages to meet my objectives.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
