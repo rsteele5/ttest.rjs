@@ -1,7 +1,7 @@
 Package: ttest.rjs
 Type: Package
 Title: What the Package Does (Title Case)
-Version: 0.1.0.9003
+Version: 1.0.0
 Author: Remington Steele
 Maintainer: Remington Steele <remington.steele@ou.edu>
 Description: R Package for OU Spring 2022 DSA:5041 Adv R. This package performs 
