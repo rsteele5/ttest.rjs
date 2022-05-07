@@ -10,8 +10,6 @@
   sub = NULL,
   poplab = "Population",
   vlab = "Value",
-  xlab = NULL,
-  ylab = NULL,
   ...
 )
 }
@@ -27,10 +25,6 @@
 
 \item{vlab}{a label to denote the values of the samples (default: "Value")}
 
-\item{xlab}{a label for the first population sample (default: "x") *TODO*}
-
-\item{ylab}{a label for the second population sample (default: "y") *TODO*}
-
 \item{...}{unused}
 }
 \description{
@@ -38,14 +32,13 @@ A customizable box plot of the two samples contained within the Rttest object
 using ggplot2
 }
 \examples{
-x <-rnorm(30,5,2)
+x <- rnorm(30,5,2)
 y <- rnorm(40,3,2)
-alpha <- 0.1
-obj <- Rttest(x = x, y = y, alpha = alpha)
+a <- 0.1
+obj <- Rttest(x, y, a)
 
 plot(obj)
 plot(obj, main="My Custom Title", sub="Which also has a sub-title",
-     poplab="Birds", vlab="wingspan",
-     xlab="Red", ylab="Black")
+     poplab="My Population", vlab="My Value Type")
 
 }

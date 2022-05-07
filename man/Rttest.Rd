@@ -4,16 +4,16 @@
 \alias{Rttest}
 \title{Rttest}
 \usage{
-Rttest(x, y, paired = F, alpha = 0.05)
+Rttest(x, y, alpha = 0.05, paired = F)
 }
 \arguments{
 \item{x}{First sample vector}
 
 \item{y}{Second sample vector}
 
-\item{paired}{Whether the samples are paired}
-
 \item{alpha}{determines range of the confidence interval's distance from 100\%}
+
+\item{paired}{Whether the samples are paired}
 }
 \value{
 An Rttest class obj containing a list comprised of a data.frame of
@@ -24,9 +24,9 @@ and p value.
 This function preforms several types of t-tests tailored towards user input.
 }
 \examples{
-x <-rnorm(30,5,2)
+x <- rnorm(30,5,2)
 y <- rnorm(40,3,2)
-alpha <- 0.1
-obj <- Rttest(x = x, y = y, alpha = alpha)
+a <- 0.1
+obj <- Rttest(x, y, a)
 
 }

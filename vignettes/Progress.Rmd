@@ -1,5 +1,5 @@
 ---
-title: "Package: Progress 4"
+title: "ttest.rjs Package: Realease v1.0"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Package: Progress 3}
@@ -16,26 +16,52 @@ knitr::opts_chunk$set(
 
 ## Constructor, Print, and Plot Functions
 
-**(*Not shown below*) I have added 4 new helper functions:** <br>
+**(*Not shown below*) Four helper functions:** <br>
 **`is.number(x)`** checks not only if `x` is a numeric but also if it is a single number.<br>
 **`is.string(x)`** checks if `x` contains characters and has a length of 1.<br>
 **`is.stringORnull(x)`** performs `is.string(x)` and additionally checks if `x` is NULL.<br>
-**`has.Rttest.data(x)`** Ensures the "data" variable is inside the Rttest object, `x`, is unaltered. Then returns that "data" for ease of use.<br><br>
-I have also added several optional parameters to personalize the use-case of both print (adjusting the size of the kable output) and the plot functions (allowing the user to personalize the labels of the plot).
+**`has.Rttest.data(x)`** Ensures the "data" variable is inside the Rttest object, `x`, is unaltered. Then returns that "data" for ease of use.<br>
 
 ``` {r source}
+library(ttest.rjs)
 ttest.rjs::Rttest
 ttest.rjs:::print.Rttest
 ttest.rjs:::plot.Rttest
 ```
 
 
-## Execution Test
+## 3 Form Execution Test
 
+Below are 3 types of tests that Rttest can preform depending on the variance of 
+the samples and given input parameters: T-test, Welch, and Paired.
 ``` {r test, fig.align="center", fig.width=5, fig.height=4}
-set.seed(21);x <-rnorm(30,5,2); set.seed(23); y<- rnorm(30, 3,2); alpha <- 0.05
-obj <-ttest.rjs::Rttest(x=x,y=y,alpha = 0.05)
-library(ttest.rjs)
-print(obj)
-plot(obj)
+set.seed(32); x=rnorm(30,mean=10,sd=15)
+set.seed(35); y=rnorm(30,mean=8,sd=15)
+t_test = Rttest(x,y,alpha=0.05,paired=FALSE)
+print(t_test)
+plot(t_test)
+
+set.seed(32); x=rnorm(30,mean=10,sd=5)
+set.seed(35); y=rnorm(30,mean=8,sd=15)
+welch=Rttest(x,y,alpha=0.05,paired=FALSE)
+print(welch)
+plot(welch)
+
+set.seed(32); x=rnorm(30,mean=10,sd=15)
+set.seed(35); y = x+ rnorm(30, 5 ,4)
+paired=Rttest(x,y,alpha=0.05,paired=TRUE)
+print(paired)
+plot(paired)
 ```
+
+## Print and Plot Extened functionality
+
+The dimentionality of the `kable` output from the `print()` function can be sized 
+to the users needs, and the labels of the `ggplot2` can be modified from the 
+`plot()` function.
+``` {r generics, fig.align="center", fig.width=5, fig.height=4}
+print(t_test, T, 400, 200)
+plot(t_test, main="My Custom Title", sub="Which also has a sub-title",
+     poplab="My Population", vlab="My Value")
+```
+

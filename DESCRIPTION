@@ -20,7 +20,8 @@ Suggests:
 Imports:
     kableExtra,
     ggplot2,
-    stats
+    stats,
+    shiny
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 Config/testthat/edition: 3

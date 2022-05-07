@@ -4,10 +4,13 @@
 \alias{print.Rttest}
 \title{Print.Rttest}
 \usage{
-\method{print}{Rttest}(x, width = NULL, height = 400, ...)
+\method{print}{Rttest}(x, html = F, width = NULL, height = 400, ...)
 }
 \arguments{
-\item{x}{Rttest object}
+\item{x}{Rttest object.}
+
+\item{html}{a logical determining whether or not to utilize kable for sample
+output.}
 
 \item{width}{The width in pixels(px). (defualt: NULL)}
 
@@ -17,5 +20,17 @@ unbounded height. (defualt: 400)}
 \item{...}{unused}
 }
 \description{
-Displays the 2 sample using kable.
+Displays the confidence interval and type of test preformed. If `html` is set
+to `True` then the 2 samples x and y are also printed using kable.
+}
+\examples{
+x <- rnorm(30,5,2)
+y <- rnorm(40,3,2)
+a <- 0.1
+obj <- Rttest(x, y, a)
+
+print(obj)
+print(obj, TRUE, 300)
+print(obj, TRUE, 400, 200)
+
 }

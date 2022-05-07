@@ -4,10 +4,10 @@
 #'
 #' @param x First sample vector
 #' @param y Second sample vector
-#' @param paired Whether the samples are paired
 #' @param alpha determines range of the confidence interval's distance from 100\%
+#' @param paired Whether the samples are paired
 #'
-#' @importFrom stats t.test
+#' @importFrom stats t.test var.test
 #'
 #' @return An Rttest class obj containing a list comprised of a data.frame of
 #' the given samples (x,y), alpha value, confidence interval of type "conf.level",
@@ -15,12 +15,12 @@
 #' @export
 #'
 #' @examples
-#' x <-rnorm(30,5,2)
+#' x <- rnorm(30,5,2)
 #' y <- rnorm(40,3,2)
-#' alpha <- 0.1
-#' obj <- Rttest(x = x, y = y, alpha = alpha)
+#' a <- 0.1
+#' obj <- Rttest(x, y, a)
 #'
-Rttest = function(x, y, paired=F, alpha=0.05){
+Rttest = function(x, y, alpha=0.05, paired=F){
   #### Input Error Checking ####
   stopifnot("`x` must be vector"= is.vector(x),
             "`y` must be vector"= is.vector(y),
@@ -31,12 +31,23 @@ Rttest = function(x, y, paired=F, alpha=0.05){
             "`alpha` must be between 0 and 1"= (alpha<=1|alpha>=0))
 
   #### T-Test Analysis and Execution ####
-  # Variance Test (Currently variance in populations are assumed to be the same)
-  tt = t.test(x,y, paired=paired , conf.level=1-alpha)
+  # Test the Variance with an F-test
+  ft = var.test(x, y, alternative = "two.sided")
+  # Determine the type of test
+  type = "Welch"
+  if (paired) {type = "Paired"}
+  else if (ft$p.value > alpha) {type = "T-test"}
+  # Perform the t-test with the derived info
+  tt = t.test(x,y, paired=paired, conf.level=1-alpha,
+              # if p value of the F-test is greater than alpha then there
+              # is no significant difference between the variances (TRUE)
+              # else there is a significant difference (FALSE)
+              var.equal = ft$p.value > alpha)
 
   #### Output data ####
   pop=rep(c("x", "y"), c(length(x),length(y))) # population identifiers
-  obj = list(data=data.frame(Population=pop,Value=c(x,y)),
+  obj = list(test_type=type,
+             data=data.frame(Population=pop,Value=c(x,y)),
              alpha=alpha,
              ci=as.vector(tt$conf.int), # stripped of "conf.int" attr
              pvalue=tt$p.value)
@@ -48,9 +59,12 @@ Rttest = function(x, y, paired=F, alpha=0.05){
 
 #' Print.Rttest
 #'
-#' Displays the 2 sample using kable.
+#' Displays the confidence interval and type of test preformed. If `html` is set
+#' to `True` then the 2 samples x and y are also printed using kable.
 #'
-#' @param x Rttest object
+#' @param x Rttest object.
+#' @param html a logical determining whether or not to utilize kable for sample
+#' output.
 #' @param width The width in pixels(px). (defualt: NULL)
 #' @param height The height in pixels(px). This can be set to NULL for and
 #' unbounded height. (defualt: 400)
@@ -59,28 +73,43 @@ Rttest = function(x, y, paired=F, alpha=0.05){
 #' @importFrom kableExtra scroll_box kable_styling kbl
 #' @export
 #'
-print.Rttest = function(x, width=NULL, height=400,...){
+#' @examples
+#' x <- rnorm(30,5,2)
+#' y <- rnorm(40,3,2)
+#' a <- 0.1
+#' obj <- Rttest(x, y, a)
+#'
+#' print(obj)
+#' print(obj, TRUE, 300)
+#' print(obj, TRUE, 400, 200)
+#'
+print.Rttest = function(x, html=F, width=NULL, height=400, ...){
   #### Input Error Checking ####
   stopifnot("`width` must be number"= is.number(width)|is.null(width),
-            "`height` must be number"= is.number(height)|is.null(height))
+            "`height` must be number"= is.number(height)|is.null(height),
+            "`html` must be a logical"= is.logical(html))
   data = has.Rttest.data(x)
   #### Data Conversion ####
-  xv = data[data[1] == 'x',2]
-  yv = data[data[1] == 'y',2]
-  # Append NAs to the shorter vector making them the same size because
-  # data.frames normally require columns to be the same length
-  max.len = max(length(xv), length(yv))
-  xv = c(xv, rep(NA, max.len - length(xv)))
-  yv = c(yv, rep(NA, max.len - length(yv)))
-  # create pixel measurements if needed
-  if(is.number(width)) { width = paste(width, "px", sep="") }
-  if(is.number(height)) { height = paste(height, "px", sep="") }
-  #### Kable Output ####
-  options(knitr.kable.NA = '') # NAs will not be included in kable output
-  # Print only the data using kable in a presentable way
-  scroll_box(kable_styling(kbl(
-    data.frame(X = xv, Y = yv), caption = "Population Samples", padding = 30)),
-    width = width, height = height)
+  print(x["ci"])
+  print(x["test_type"])
+  if(html){
+    xv = data[data[1] == 'x',2]
+    yv = data[data[1] == 'y',2]
+    # Append NAs to the shorter vector making them the same size because
+    # data.frames normally require columns to be the same length
+    max.len = max(length(xv), length(yv))
+    xv = c(xv, rep(NA, max.len - length(xv)))
+    yv = c(yv, rep(NA, max.len - length(yv)))
+    # create pixel measurements if needed
+    if(is.number(width)) { width = paste(width, "px", sep="") }
+    if(is.number(height)) { height = paste(height, "px", sep="") }
+    #### Kable Output ####
+    options(knitr.kable.NA = '') # NAs will not be included in kable output
+    # Print only the data using kable in a presentable way
+    scroll_box(kable_styling(kbl(
+      data.frame(X = xv, Y = yv), caption = "Population Samples", padding = 30)),
+      width = width, height = height)
+  }
 }
 
 #' Plot Diagnostics for an Rttest Object
@@ -91,45 +120,56 @@ print.Rttest = function(x, width=NULL, height=400,...){
 #' @param x Rttest object.
 #' @param main main title for the plot.
 #' @param sub sub-title for the plot.
-#' @param xlab a label for the first population sample (default: "x") *TODO*
-#' @param ylab a label for the second population sample (default: "y") *TODO*
 #' @param poplab a label to denote what population the samples were taken from
 #' (default: "Population")
 #' @param vlab a label to denote the values of the samples (default: "Value")
 #' @param ... unused
-#' @importFrom ggplot2 ggplot aes geom_boxplot labs
+#' @importFrom ggplot2 ggplot aes geom_boxplot geom_line geom_point labs
 #' @export
 #'
 #' @examples
-#' x <-rnorm(30,5,2)
+#' x <- rnorm(30,5,2)
 #' y <- rnorm(40,3,2)
-#' alpha <- 0.1
-#' obj <- Rttest(x = x, y = y, alpha = alpha)
+#' a <- 0.1
+#' obj <- Rttest(x, y, a)
 #'
 #' plot(obj)
 #' plot(obj, main="My Custom Title", sub="Which also has a sub-title",
-#'      poplab="Birds", vlab="wingspan",
-#'      xlab="Red", ylab="Black")
+#'      poplab="My Population", vlab="My Value Type")
 #'
 plot.Rttest = function(x, main="Comparison of Value Distripution per Sample",
-                       sub=NULL, poplab="Population", vlab="Value",
-                       xlab=NULL, ylab=NULL, ...){
+                       sub=NULL, poplab="Population", vlab="Value", ...){
   #### Global Variable Instantiation ####
   Population = NULL
   Value = NULL
+  pairs = NULL
   #### Input Error Checking ####
   stopifnot("`main` must be string"= is.stringORnull(main),
             "`sub` must be string"= is.stringORnull(sub),
-            "`xlab` must be string"= is.stringORnull(xlab),
-            "`ylab` must be string"= is.stringORnull(ylab),
             "`poplab` must be string"= is.string(poplab),
             "`vlab` must be string"= is.string(vlab))
   data = has.Rttest.data(x)
   #### Generate and return plot ####
-  rtp = ggplot(data, aes(x=Population, y=Value, fill=Population)) +
-    geom_boxplot() + labs(title=main, subtitle=sub, x=poplab, y=vlab, fill=poplab)
-  # TODO:implement the modification of x and y labels to plot
-  rtp
+  # If paired link pairs together
+  if(x$test_type == "Paired"){
+    xl = nrow(data[data$Population == "x",])
+    yl = nrow(data[data$Population == "y",])
+    data$pairs = c(1:xl,1:yl)
+  }
+
+  # create 2 sample base plot with labels
+  rpt = ggplot(data, aes(x=Population, y=Value)) +
+        geom_boxplot(aes(fill=Population)) +
+        labs(title=main, subtitle=sub, x=poplab, y=vlab, fill=poplab)
+
+  # If paired connect pairs to show "before and after" link and update title
+  if(x$test_type == "Paired"){
+    rpt = rpt + geom_line(aes(group = pairs)) +
+          geom_point(size = 2) +
+          labs(title=paste("Paired ",main))
+  }
+
+  rpt
 }
 
 #### Helper Functions ####
