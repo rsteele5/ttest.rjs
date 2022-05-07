@@ -6,4 +6,4 @@ Course:   Spring 2022 - DSA-5041 Advanced R
 Student:  Remington Steele
 </pre>
 
-R Package Progress stage: 3<br>
+R Package Progress stage: 4<br>
